@@ -18,7 +18,7 @@
 #include <iostream>
 
 #include <boost/thread.hpp>
-#include <boost/ref.hpp>
+//#include <boost/ref.hpp>
 #include <boost/date_time.hpp>
 
 void workerFunc(std::vector<std::string>& msgs, int i)
@@ -65,19 +65,23 @@ int main(int argc, char* argv[])
 
     msgs.reserve(5);
     std::cout << msgs.capacity() <<std::endl;
-    std::vector<boost::thread *> threads(5);
+
+    msgs.reserve(msgs.capacity() + 1);
+    std::cout << msgs.capacity() <<std::endl;
+    std::vector<boost::thread *> threads;
 
     std::cout << "main: startup" << std::endl;
 
     //std::vector<boost::thread> workerThread; //(workerFunc);
 
-    for (size_t i = 0; i < threads.size(); i++)
+    for (size_t i = 0; i < 25; i++)
     {
+        threads.resize(threads.size() + 1);
         threads[i] = new boost::thread(workerFunc, boost::ref(msgs), i);
         std::cout << "kicked off thread:" << boost::to_string(i) << std::endl;
     }
 
-    for (size_t i = 0; i < threads.size(); i++)
+    for (size_t i = 0; i < 25; i++)
     {
         std::cout << "waiting to join thread:"  << boost::to_string(i) << std::endl;
         threads[i]->join();
